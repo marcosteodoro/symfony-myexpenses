@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
+     * @Route("/", name="login")
      */
     public function login(AuthenticationUtils $authenticationUtils)
     {
-        if (!is_null($this->getUser()) && ($this->getUser()->getRoles()[0] != 'ROLE_ADMIN')) {
+        if (!is_null($this->getUser()) && ($this->getUser()->getRoles()[0] == 'ROLE_ADMIN')) {
             return $this->redirectToRoute('admin');
         }
    
