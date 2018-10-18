@@ -1,35 +1,93 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Admin - Login</title>
-</head>
-<body>
-    <h1>Admin - Login</h1>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Entrar</title>
 
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+        {% include 'includes/main_styles.html.twig' %}
 
-    <form action="{{ path('login') }}" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    </head>
+    <body>
+        <style>
+            @media (min-width: 768px) {
+                .h-md-100 {
+                    height: 100vh;
+                }
+            }
 
-        <br>
-        <br>
+            .btn-round {
+                border-radius: 30px;
+            }
+            .bg-indigo {
+                background-image: linear-gradient(#0069a2, #0270ad); 
+            }
+            .text-cyan {
+                color: #35bdff;
+            }
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password" />
+            .logoarea > .logo {
+                color: white;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+            }
 
-        <br>
-        <br>
+        </style>
+        <div class="d-md-flex h-md-100 align-items-center">
 
-        <input type="hidden" name="_target_path" value="/admin" />
+            <!-- First Half -->
 
-        <button type="submit">Login</button>
-    </form>
+            <div class="col-md-6 p-0 bg-indigo h-md-100">
+                <div class="text-white d-md-flex align-items-center h-100 p-5 text-center justify-content-center">
+                    <div class="logoarea pt-5 pb-5">
+                        
+                    {# <i class="ti-panel logo align-middle"></i> #}
+                        
+                    </div>
+                </div>
+            </div>
 
-</body>
+            <!-- Second Half -->
+
+            <div class="col-md-6 p-0 bg-white h-md-100 loginarea">
+                <div class="d-md-flex align-items-center h-md-100 p-5 justify-content-center">
+                    <h1>Entrar</h1>
+
+                    {% if error %}
+                        <div class="card">
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <form action="{{ path('login') }}" method="post">
+                        <div class="form-group">
+                            <label for="username">Usuário:</label>
+                            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" required placeholder="Insira o usuário..." autocomplete="false"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Senha:</label>
+                            <input type="password" id="password" name="_password" class="form-control" required placeholder="Insira a senha..." autocomplete="false"/>
+                        </div>
+
+                        <input type="hidden" name="_target_path" value="/admin"/>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-large">Entrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% include 'includes/main_scripts.html.twig' %}
+
+    </body>
 </html>

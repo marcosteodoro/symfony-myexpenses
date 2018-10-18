@@ -8,15 +8,6 @@ security:
             entity:
                 class: App\Entity\User
                 property: username
-        # in_memory: 
-        #     memory: 
-        #         users: 
-        #             marcos:
-        #                 password: marcospass
-        #                 roles: 'ROLE_ADMIN'
-        #             marcos2:
-        #                 password: marcospass2
-        #                 roles: 'ROLE_USER'
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
