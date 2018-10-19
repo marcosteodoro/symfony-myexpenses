@@ -7,13 +7,13 @@
         </div>
 
         <ul class="nav">
-            <li class="{% if route == 'admin' %}active{% endif %}">
+            <li class="{% if route starts with('admin') %}active{% endif %}">
                 <a href="/admin">
                     <i class="ti-panel"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
-            <li class="{% if route == 'user' %}active{% endif %}">
+            <li class="{% if route starts with('user') %}active{% endif %}">
                 <a href="/user">
                     <i class="ti-user"></i>
                     <p>Usuários</p>

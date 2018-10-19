@@ -37,6 +37,13 @@ class User implements UserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * Password in plain text
+     *
+     * @var string
+     */
+    private $plainPassword;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,6 +95,16 @@ class User implements UserInterface, \Serializable
         $this->isActive = $isActive;
 
         return $this;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
     }
 
     public function getSalt()
