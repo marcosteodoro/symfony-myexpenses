@@ -2,18 +2,18 @@
     <div class="sidebar-wrapper">
         <div class="logo">
             <a href="https://github.com/marcosteodoro/" class="simple-text">
-                Marcos Teodoro
+                MyExpenses
             </a>
         </div>
 
         <ul class="nav">
-            <li class="active">
+            <li class="{% if route == 'admin' %}active{% endif %}">
                 <a href="/admin">
                     <i class="ti-panel"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
-            <li>
+            <li class="{% if route == 'user' %}active{% endif %}">
                 <a href="/user">
                     <i class="ti-user"></i>
                     <p>Usuários</p>

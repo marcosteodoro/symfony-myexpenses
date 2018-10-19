@@ -712,7 +712,7 @@ fieldset[disabled]
 .navbar .navbar-nav > li > a.btn-primary, .btn-primary {
     /* border-color: #7A9E9F; */
     /* color: #7A9E9F; */
-    border-color: #7A9E9F;
+    border-color: #4790E0;
     color: #4790E0;
 }
 
@@ -1170,7 +1170,7 @@ fieldset[disabled] .btn-neutral.active {
 
 .btn-sm {
     font-size: 12px;
-    border-radius: 26px;
+    border-radius: 4px;
     padding: 4px 10px;
 }
 

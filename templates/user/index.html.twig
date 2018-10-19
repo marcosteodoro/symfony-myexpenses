@@ -3,21 +3,26 @@
 {% block title %}Gerencimanto de usuários{% endblock %}
 
 {% block body %}
-
     <div class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="header">
-                            <h4 class="title">Lista de usuário</h4>
+                            <h4 class="title">Lista de usuário &nbsp; 
+                                <a href="/user/new">
+                                    <button class="btn btn-sucess btn-sm">
+                                        Adicionar
+                                    </button>    
+                                </a>
+                            </h4>
                             {# <p class="category">Here is a subtitle for this table</p> #}
                         </div>
                         <div class="content table-responsive table-full-width">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Código</th>
                                         <th>Usuário</th>
                                         <th>E-mail</th>
                                         <th>Ativo</th>
@@ -30,8 +35,24 @@
                                             <td>{{ user.id }}</td>
                                             <td>{{ user.username }}</td>
                                             <td>{{ user.email }}</td>
-                                            <td>{{ user.isActive }}</td>
-                                            <td><button>ação</button></td>
+                                            <td>
+                                                {% if user.isActive %}
+                                                    Sim
+                                                {% else %}
+                                                    Não
+                                                {% endif %}
+                                                
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm">
+                                                    {# <i class="ti-pencil"></i> #}
+                                                    Editar
+                                                </button>
+                                                <button class="btn btn-danger btn-sm">
+                                                    {# <i class="ti-trash"></i> #}
+                                                    Deletar
+                                                </button>
+                                            </td>
                                         </tr>                                        
                                     {% endfor %}                                    
                                 </tbody>
