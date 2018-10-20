@@ -71,4 +71,31 @@ class UserController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/user/edit/{id}"), methods={"GET","HEAD"})
+     */
+    public function edit(Request $request, User $user)
+    {
+        $form = $this->createFormBuilder($user)
+                     ->add('username', TextType::class, ['label' => 'Usuário', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
+                     ->add('email', EmailType::class, ['label' => 'E-mail', 'attr' => ['class' => 'form-control']])
+                     ->add('isActive', CheckboxType::class, ['label' => 'Ativo', 'required' => false])
+                     ->add('save', SubmitType::class, ['label' => 'Salvar', 'attr' => ['class' => 'btn btn-primary mt-3']])
+                     ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'module_title' => 'Editar usuário',
+            'form' => $form->createView()
+        ]);
+    }
 }
