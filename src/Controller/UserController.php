@@ -7,9 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
-
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -41,12 +39,12 @@ class UserController extends AbstractController
     public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new User();
-        
+
         $form = $this->createFormBuilder($user)
-                     ->add('username', TextType::class, ['label' => 'Usuário', 'attr' => ['class' => 'form-control']])
+                     ->add('username', TextType::class, ['label' => 'Usuário', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
                      ->add('plainPassword', RepeatedType::class, ['type' => PasswordType::class,
-                                                                  'first_options'  => array('label' => 'Senha', 'attr' => ['class' => 'form-control']),
-                                                                  'second_options' => array('label' => 'Repita sua senha', 'attr' => ['class' => 'form-control']),
+                     'first_options'  => array('label' => 'Senha', 'attr' => ['class' => 'form-control']),
+                     'second_options' => array('label' => 'Repita sua senha', 'attr' => ['class' => 'form-control']),
                      ])
                      ->add('email', EmailType::class, ['label' => 'E-mail', 'attr' => ['class' => 'form-control']])
                      ->add('isActive', CheckboxType::class, ['label' => 'Ativo'])
