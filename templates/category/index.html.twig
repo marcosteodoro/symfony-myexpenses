@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gerenciamento de usuários{% endblock %}
+
+{% block body %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="header">
+                            <h4 class="title">Lista de categorias &nbsp; 
+                                <a href="/category/new">
+                                    <button class="btn btn-sucess btn-sm">
+                                        Adicionar
+                                    </button>    
+                                </a>
+                            </h4>
+                            <p class="category">Listagem de categorias vinculadas ao usuário atual</p>
+                        </div>
+
+                        {% if categories|length > 0 %}
+
+                        <div class="content table-responsive table-full-width">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nome</th>
+                                        <th>Descrição</th>
+                                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                            <th>Usuário</th>
+                                        {% endif %}                                           
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {% for category in categories %}
+                                        <tr>
+                                            <td>{{ category.id }}</td>
+                                            <td>{{ category.name }}</td>
+                                            <td>{{ category.description }}</td>
+                                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                                <td>{{ category.user.name }}</td>
+                                            {% endif %}                                           
+                                            <td>
+                                            <a href="/category/edit/{{ category.id }}">
+                                                <button class="btn btn-primary btn-sm">
+                                                    Editar
+                                                </button>
+                                            </a>
+                                                <button class="btn btn-danger btn-sm btn-remove-user" data-id="{{ category.id }}">
+                                                    Deletar
+                                                </button>
+                                            </td>
+                                        </tr>                                                                                
+                                    {% endfor %}                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="content">
+                            <h4>Nenhuma categoria cadastrada! &#x1F61E</h4>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    const btnsRemoveUser = document.querySelectorAll('.btn-remove-user');
+
+    btnsRemoveUser.forEach((item) => {
+        item.addEventListener('click', (ev) => {
+            const idCategoryDelete = ev.target.dataset.id;
+
+            swal({
+                title: "Tem certeza?",
+                text: "Após deletar, não será possível recuperar a informação!",
+                icon: "warning",
+                buttons: ['Cancelar', 'Ok'],
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    fetch(`/category/delete/${idCategoryDelete}`, {
+                        method: 'DELETE',
+                    }).then((res) => {
+                        
+                        swal("Categoria deletada com sucesso!", {
+                            icon: "success",
+                        }).then(() => window.location.reload());
+                    });                    
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

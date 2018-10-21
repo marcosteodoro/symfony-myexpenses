@@ -12,6 +12,12 @@
                     <p>Dashboard</p>
                 </a>
             </li>
+            <li class="{% if route starts with('category') %}active{% endif %}">
+                <a href="/category">
+                    <i class="ti-menu-alt"></i>
+                    <p>Categorias</p>
+                </a>
+            </li>
             {% if is_granted('ROLE_SUPER_ADMIN') %}
             <li class="{% if route starts with('user') %}active{% endif %}">
                 <a href="/user">
