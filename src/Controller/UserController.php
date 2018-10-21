@@ -17,11 +17,13 @@ use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class UserController extends AbstractController
 {
     /**
      * @Route("/user", name="user")
+     * @isGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function index()
     {
@@ -36,6 +38,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/new", name="user_new")
+     * @isGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -81,6 +84,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/edit/{id}"), methods={"GET","HEAD"})
+     * @IsGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function edit(Request $request, User $user)
     {
@@ -113,6 +117,7 @@ class UserController extends AbstractController
 
     /** 
      * @Route("/user/delete/{id}"), methods=({"DELETE"})
+     * @IsGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function delete(Request $resquest, User $user)
     {

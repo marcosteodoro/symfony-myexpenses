@@ -170,7 +170,7 @@ class User implements UserInterface, \Serializable
                 return ['ROLE_SUPER_ADMIN'];
         }
         
-        return [];
+        return ['ROLE_USER'];
     }
 
     public function eraseCredentials()
