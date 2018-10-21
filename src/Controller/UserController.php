@@ -47,7 +47,7 @@ class UserController extends AbstractController
                      'second_options' => array('label' => 'Repita sua senha', 'attr' => ['class' => 'form-control']),
                      ])
                      ->add('email', EmailType::class, ['label' => 'E-mail', 'attr' => ['class' => 'form-control']])
-                     ->add('isActive', CheckboxType::class, ['label' => 'Ativo'])
+                     ->add('isActive', CheckboxType::class, ['label' => 'Ativo', 'required' => false])
                      ->add('save', SubmitType::class, ['label' => 'Adicionar', 'attr' => ['class' => 'btn btn-primary mt-3']])
                      ->getForm();
 
@@ -97,5 +97,20 @@ class UserController extends AbstractController
             'module_title' => 'Editar usuário',
             'form' => $form->createView()
         ]);
+    }
+
+    /** 
+     * @Route("/user/delete/{id}"), methods=({"DELETE"})
+     */
+    public function delete(Request $resquest, User $user)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $response = new Response();
+        $response->setStatusCode(204, 'No content');
+
+        return $response->send();
     }
 }
