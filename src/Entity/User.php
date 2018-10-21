@@ -65,6 +65,16 @@ class User implements UserInterface, \Serializable
      */
     private $plainPassword;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Category", mappedBy="user")
+     */
+    private $categories;
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -129,21 +139,29 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
-
+    
     public function getRoleLevel(): ?string
     {
         return $this->roleLevel;
     }
-
+    
     public function setRoleLevel(string $roleLevel): self
     {
         if (! in_array($roleLevel, [self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN])) {
             throw new \InvalidArgumentException("Perfil de usuário inválido!");
         }
-
+        
         $this->roleLevel = $roleLevel;
-
+        
         return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
     }
 
     public function getPlainPassword()
