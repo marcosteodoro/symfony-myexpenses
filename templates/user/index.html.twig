@@ -23,8 +23,10 @@
                                 <thead>
                                     <tr>
                                         <th>Código</th>
+                                        <th>Nome</th>
                                         <th>Usuário</th>
                                         <th>E-mail</th>
+                                        <th>Acesso</th>
                                         <th>Ativo</th>
                                         <th>Ações</th>
                                     </tr>
@@ -33,15 +35,22 @@
                                     {% for user in users %}
                                         <tr>
                                             <td>{{ user.id }}</td>
+                                            <td>{{ user.name }}</td>
                                             <td>{{ user.username }}</td>
                                             <td>{{ user.email }}</td>
+                                            <td>
+                                            {% if user.roleLevel == 'super_admin' %}
+                                                Super Administrador
+                                            {% elseif user.roleLevel == 'admin' %}
+                                                Administrador
+                                            {% endif %}
+                                            </td>
                                             <td>
                                                 {% if user.isActive %}
                                                     Sim
                                                 {% else %}
                                                     Não
-                                                {% endif %}
-                                                
+                                                {% endif %}                                                
                                             </td>
                                             <td>
                                             <a href="/user/edit/{{ user.id }}">

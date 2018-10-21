@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
@@ -41,13 +42,19 @@ class UserController extends AbstractController
         $user = new User();
 
         $form = $this->createFormBuilder($user)
+                     ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
                      ->add('username', TextType::class, ['label' => 'Usuário', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
                      ->add('plainPassword', RepeatedType::class, ['type' => PasswordType::class,
                      'first_options'  => array('label' => 'Senha', 'attr' => ['class' => 'form-control']),
                      'second_options' => array('label' => 'Repita sua senha', 'attr' => ['class' => 'form-control']),
                      ])
                      ->add('email', EmailType::class, ['label' => 'E-mail', 'attr' => ['class' => 'form-control']])
+                     ->add('roleLevel', ChoiceType::class)
                      ->add('isActive', CheckboxType::class, ['label' => 'Ativo', 'required' => false])
+                     ->add('roleLevel', ChoiceType::class, ['label' => 'Nível de acesso', 'required' => true, 'choices' => [
+                         'Administrador' => 'admin',
+                         'Super Administrador' => 'super_admin'
+                     ], 'attr' => ['class' => 'form-control']])
                      ->add('save', SubmitType::class, ['label' => 'Adicionar', 'attr' => ['class' => 'btn btn-primary mt-3']])
                      ->getForm();
 
@@ -78,8 +85,13 @@ class UserController extends AbstractController
     public function edit(Request $request, User $user)
     {
         $form = $this->createFormBuilder($user)
+                     ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
                      ->add('username', TextType::class, ['label' => 'Usuário', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
                      ->add('email', EmailType::class, ['label' => 'E-mail', 'attr' => ['class' => 'form-control']])
+                     ->add('roleLevel', ChoiceType::class, ['label' => 'Nível de acesso', 'required' => true, 'choices' => [
+                        'Administrador' => 'admin',
+                        'Super Administrador' => 'super_admin'
+                    ], 'attr' => ['class' => 'form-control']])
                      ->add('isActive', CheckboxType::class, ['label' => 'Ativo', 'required' => false])
                      ->add('save', SubmitType::class, ['label' => 'Salvar', 'attr' => ['class' => 'btn btn-primary mt-3']])
                      ->getForm();

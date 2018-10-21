@@ -23,6 +23,11 @@ class User implements UserInterface, \Serializable
     private $username;
 
     /**
+     * @ORM\Column(type="string", length=80)
+     */
+    private $name;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $password;
@@ -36,6 +41,22 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="boolean")
      */
     private $isActive;
+
+    /**
+     * @ORM\Column(type="string", nullable=false), columnDefinition="ENUM('admin', 'super_admin')", options={"default":"admin"})
+     *
+     */
+    private $roleLevel;
+
+    /**
+     * Constante valor enum super admin banco de dados
+     */
+    const ROLE_SUPER_ADMIN = 'super_admin';
+    
+    /**
+     * Constante valor enum admin banco de dados
+     */
+    const ROLE_ADMIN = 'admin';
 
     /**
      * Password in plain text
@@ -57,6 +78,18 @@ class User implements UserInterface, \Serializable
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
@@ -97,6 +130,22 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    public function getRoleLevel(): ?string
+    {
+        return $this->roleLevel;
+    }
+
+    public function setRoleLevel(string $roleLevel): self
+    {
+        if (! in_array($roleLevel, [self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN])) {
+            throw new \InvalidArgumentException("Perfil de usuário inválido!");
+        }
+
+        $this->roleLevel = $roleLevel;
+
+        return $this;
+    }
+
     public function getPlainPassword()
     {
         return $this->plainPassword;
@@ -114,7 +163,14 @@ class User implements UserInterface, \Serializable
 
     public function getRoles()
     {
-        return array('ROLE_ADMIN');
+        switch ($this->getRoleLevel()) {
+            case 'admin': 
+                return ['ROLE_ADMIN'];
+            case 'super_admin':
+                return ['ROLE_SUPER_ADMIN'];
+        }
+        
+        return [];
     }
 
     public function eraseCredentials()
@@ -128,8 +184,6 @@ class User implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
-            // see section on salt below
-            // $this->salt,
         ));
     }
 
