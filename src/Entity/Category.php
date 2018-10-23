@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\User;
 
 /**
@@ -21,16 +22,25 @@ class Category
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
     private $name;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="categories")
+     * @Assert\NotBlank()
      */
     private $user;
-
+    
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 10,
+     *      max = 255,
+     *      minMessage = "A descrição precisa ter mais de {{ limit }} caracteres",
+     *      maxMessage = "A descrição tem um limite de {{ limit }} caracteres"
+     * )
      */
     private $description;
 
