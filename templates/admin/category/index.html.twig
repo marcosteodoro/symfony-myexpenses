@@ -10,7 +10,7 @@
                     <div class="card">
                         <div class="header">
                             <h4 class="title">Lista de categorias &nbsp; 
-                                <a href="/category/new">
+                                <a href="/admin/category/new">
                                     <button class="btn btn-sucess btn-sm">
                                         Adicionar
                                     </button>    
@@ -45,14 +45,17 @@
                                                 <td>{{ category.user.name }}</td>
                                             {% endif %}                                           
                                             <td>
-                                            <a href="/category/edit/{{ category.id }}">
+                                            <a href="/admin/category/edit/{{ category.id }}">
                                                 <button class="btn btn-primary btn-sm">
                                                     Editar
                                                 </button>
                                             </a>
-                                                <button class="btn btn-danger btn-sm btn-remove-user" data-id="{{ category.id }}">
+                                            <form class="formDelete" action="/admin/category/delete/{{ category.id }}">
+                                                {# <input type="hidden" name="_method" value="DELETE"> #}
+                                                <button class="btn btn-danger btn-sm btn-remove-user">
                                                     Deletar
-                                                </button>
+                                                </button>                                                
+                                            </form>
                                             </td>
                                         </tr>                                                                                
                                     {% endfor %}                                    
@@ -73,11 +76,11 @@
 
 {% block javascripts %}
 <script>
-    const btnsRemoveUser = document.querySelectorAll('.btn-remove-user');
+    const formsDelete = document.querySelectorAll('.formDelete');
 
-    btnsRemoveUser.forEach((item) => {
-        item.addEventListener('click', (ev) => {
-            const idCategoryDelete = ev.target.dataset.id;
+    formsDelete.forEach((item) => {
+        item.addEventListener('submit', (ev) => {
+            ev.preventDefault();   
 
             swal({
                 title: "Tem certeza?",
@@ -86,18 +89,9 @@
                 buttons: ['Cancelar', 'Ok'],
                 dangerMode: true,
             }).then((willDelete) => {
-                if (willDelete) {
-                    fetch(`/category/delete/${idCategoryDelete}`, {
-                        method: 'DELETE',
-                    }).then((res) => {
-                        
-                        swal("Categoria deletada com sucesso!", {
-                            icon: "success",
-                        }).then(() => window.location.reload());
-                    });                    
-                }
-            });
-        });
+                item.submit();
+            });       
+        })
     });
 </script>
 {% endblock %}

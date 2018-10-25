@@ -9,7 +9,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;  
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-// use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -19,7 +18,7 @@ use App\Entity\Category;
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/category", name="category")
+     * @Route("/admin/category", name="category")
      */
     public function index()
     {
@@ -27,7 +26,7 @@ class CategoryController extends AbstractController
 
         $categories = ($this->isGranted('ROLE_SUPER_ADMIN')) ? $entityRepository->findAll() : $this->getUser()->getCategories();
 
-        return $this->render('category/index.html.twig', [
+        return $this->render('admin/category/index.html.twig', [
             'controller_name' => 'CategotyController',
             'module_title' => 'Gerenciamento de categorias',
             'categories' => $categories
@@ -35,7 +34,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/category/new")
+     * @Route("/admin/category/new")
      *
      * @param Request $request
      */
@@ -75,14 +74,14 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('category');
         }
 
-        return $this->render('category/new.html.twig', [
+        return $this->render('admin/category/new.html.twig', [
             'module_title' => 'Adicionar categoria',
             'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/category/edit/{id}"), methods={"GET","HEAD"})
+     * @Route("/admin/category/edit/{id}"), methods={"GET","HEAD"})
      */
     public function edit(Request $request, Category $category)
     {
@@ -118,14 +117,14 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('category');
         }
 
-        return $this->render('category/edit.html.twig', [
+        return $this->render('admin/category/edit.html.twig', [
             'module_title' => 'Editar categoria',
             'form' => $form->createView()
         ]);
     }
 
     /** 
-     * @Route("/category/delete/{id}"), methods=({"DELETE"})
+     * @Route("/admin/category/delete/{id}"), methods=({"DELETE"})
      */
     public function delete(Request $resquest, Category $category)
     {
@@ -133,9 +132,6 @@ class CategoryController extends AbstractController
         $entityManager->remove($category);
         $entityManager->flush();
 
-        $response = new Response();
-        $response->setStatusCode(204, 'No content');
-
-        return $response->send();
+        return $this->redirectToRoute('category');
     }
 }
