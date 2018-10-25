@@ -10,7 +10,7 @@
                     <div class="card">
                         <div class="header">
                             <h4 class="title">Lista de usuários &nbsp; 
-                                <a href="/user/new">
+                                <a href="/admin/user/new">
                                     <button class="btn btn-sucess btn-sm">
                                         Adicionar
                                     </button>    
@@ -53,14 +53,20 @@
                                                 {% endif %}                                                
                                             </td>
                                             <td>
-                                            <a href="/user/edit/{{ user.id }}">
+                                            <a href="/admin/user/edit/{{ user.id }}">
                                                 <button class="btn btn-primary btn-sm">
                                                     Editar
                                                 </button>
                                             </a>
-                                                <button class="btn btn-danger btn-sm btn-remove-user" data-id="{{ user.id }}">
+                                            <form class="formDelete" action="/admin/user/delete/{{ user.id }}">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button class="btn btn-danger btn-sm">
                                                     Deletar
-                                                </button>
+                                                </button>                                                
+                                            </form>
+                                                {# <button class="btn btn-danger btn-sm btn-remove-user" data-id="{{ user.id }}">
+                                                    Deletar
+                                                </button> #}
                                             </td>
                                         </tr>                                        
                                     {% endfor %}                                    
@@ -77,11 +83,11 @@
 
 {% block javascripts %}
 <script>
-    const btnsRemoveUser = document.querySelectorAll('.btn-remove-user');
+    const formsDelete = document.querySelectorAll('.formDelete');
 
-    btnsRemoveUser.forEach((item) => {
-        item.addEventListener('click', (ev) => {
-            const idUserDelete = ev.target.dataset.id;
+    formsDelete.forEach((item) => {
+        item.addEventListener('submit', (ev) => {
+            ev.preventDefault();   
 
             swal({
                 title: "Tem certeza?",
@@ -90,18 +96,9 @@
                 buttons: ['Cancelar', 'Ok'],
                 dangerMode: true,
             }).then((willDelete) => {
-                if (willDelete) {
-                    fetch(`/user/delete/${idUserDelete}`, {
-                        method: 'DELETE',
-                    }).then((res) => {
-                        
-                        swal("Usuário deletado com sucesso!", {
-                            icon: "success",
-                        }).then(() => window.location.reload());
-                    });                    
-                }
-            });
-        });
+                item.submit();
+            });       
+        })
     });
 </script>
 {% endblock %}

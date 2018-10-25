@@ -22,14 +22,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/user", name="user")
+     * @Route("/admin/user", name="user")
      * @isGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function index()
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
-        return $this->render('user/index.html.twig', [
+        return $this->render('admin/user/index.html.twig', [
             'controller_name' => 'UserController',
             'module_title' => 'Gerenciamento de usuários',
             'users' => $users
@@ -37,7 +37,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/new", name="user_new")
+     * @Route("/admin/user/new", name="user_new")
      * @isGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder)
@@ -76,14 +76,14 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user');
         }
         
-        return $this->render('user/new.html.twig', [
+        return $this->render('admin/user/new.html.twig', [
             'module_title' => 'Adicionar usuário',
             'form' => $form->createView()
         ]);
     }
 
     /**
-     * @Route("/user/edit/{id}"), methods={"GET","HEAD"})
+     * @Route("/admin/user/edit/{id}"), methods={"GET","HEAD"})
      * @IsGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function edit(Request $request, User $user)
@@ -109,14 +109,14 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user');
         }
 
-        return $this->render('user/edit.html.twig', [
+        return $this->render('admin/user/edit.html.twig', [
             'module_title' => 'Editar usuário',
             'form' => $form->createView()
         ]);
     }
 
     /** 
-     * @Route("/user/delete/{id}"), methods=({"DELETE"})
+     * @Route("/admin/user/delete/{id}"), methods=({"DELETE"})
      * @IsGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function delete(Request $resquest, User $user)
@@ -125,9 +125,6 @@ class UserController extends AbstractController
         $entityManager->remove($user);
         $entityManager->flush();
 
-        $response = new Response();
-        $response->setStatusCode(204, 'No content');
-
-        return $response->send();
+        return $this->redirectToRoute('user');
     }
 }
