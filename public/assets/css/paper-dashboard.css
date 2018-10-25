@@ -3851,3 +3851,9 @@ textarea.form-control {
         -webkit-overflow-scrolling: touch;
     }
 }
+
+/* Personalizações do tema */
+form.formDelete {
+    float: left !important;
+    margin-right: 5px;
+}
