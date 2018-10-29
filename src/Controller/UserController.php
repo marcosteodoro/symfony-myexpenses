@@ -21,11 +21,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Entity\Exception\UserInvalidArgumentException;
 use Symfony\Component\Form\FormError;
 
+
+ /**
+  * @IsGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
+  */
 class UserController extends AbstractController
 {
     /**
      * @Route("/admin/user", name="user")
-     * @isGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function index()
     {
@@ -40,7 +43,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/admin/user/new", name="user_new")
-     * @isGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -90,7 +92,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/admin/user/edit/{id}"), methods={"GET","HEAD"})
-     * @IsGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function edit(Request $request, User $user)
     {
@@ -123,7 +124,6 @@ class UserController extends AbstractController
 
     /** 
      * @Route("/admin/user/delete/{id}"), methods=({"DELETE"})
-     * @IsGranted("ROLE_SUPER_ADMIN", message="Você não tem as permissões necessárias para acessar o módulo!")
      */
     public function delete(Request $resquest, User $user)
     {
