@@ -18,6 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Entity\Exception\UserInvalidArgumentException;
+use Symfony\Component\Form\FormError;
 
 class UserController extends AbstractController
 {
@@ -66,14 +68,18 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
             $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
-
+            
             $user->setPassword($password);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('user');
+            
+            try {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+                return $this->redirectToRoute('user');
+            } catch (UserInvalidArgumentException $e) {
+                $formError = new FormError($e->getMessage());
+                $form->addError($formError);
+            }
         }
         
         return $this->render('admin/user/new.html.twig', [
