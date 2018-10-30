@@ -31,7 +31,7 @@ class RevenueController extends AbstractController
     }
 
     /**
-     * @Route("/admin/revenue/new", name="new_revenue")
+     * @Route("/admin/revenue/new", name="revenue_new")
      */
     public function new(Request $request)
     {
@@ -70,7 +70,7 @@ class RevenueController extends AbstractController
     }
 
     /**
-     * @Route("admin/revenue/edit/{id}", name="edit_revenue")
+     * @Route("/admin/revenue/edit/{id}", name="revenue_edit")
      */
     public function edit(Revenue $revenue, Request $request)
     {
@@ -101,5 +101,17 @@ class RevenueController extends AbstractController
             'module_title' => 'Editar receita',
             'form' => $form->createView()
         ]);
+    }
+
+    /** 
+     * @Route("/admin/revenue/delete/{id}"), methods=({"DELETE"})
+     */
+    public function delete(Request $resquest, Revenue $revenue)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($revenue);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('revenue');
     }
 }
