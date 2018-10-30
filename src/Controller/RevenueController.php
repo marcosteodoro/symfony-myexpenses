@@ -31,7 +31,7 @@ class RevenueController extends AbstractController
     }
 
     /**
-     * @Route("/admin/revenue/new")
+     * @Route("/admin/revenue/new", name="new_revenue")
      */
     public function new(Request $request)
     {
@@ -65,6 +65,40 @@ class RevenueController extends AbstractController
 
         return $this->render('admin/revenue/new.html.twig', [
             'module_title' => 'Adicionar receita',
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("admin/revenue/edit/{id}", name="edit_revenue")
+     */
+    public function edit(Revenue $revenue, Request $request)
+    {
+        $form = $this->createFormBuilder($revenue)
+                     ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
+                     ->add('description', TextType::class, ['label' => 'Descrição', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
+                     ->add('value', MoneyType::class, ['label' => 'Valor', 'currency' => 'BRL', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
+                     ->add('date', DateType::class, ['label' => 'Data', 'widget' => 'single_text', 'attr' => ['value' => \date('Y-m-d'), 'class' => 'form-control', 'autocomplete' => false]])
+                     ->add('category', EntityType::class, [
+                         'label' => 'Categoria',
+                         'class' => Category::class,
+                         'choices' => $this->getUser()->getCategories(),
+                         'attr' => ['class' => 'form-control']
+                     ])
+                     ->add('save', SubmitType::class, ['label' => 'Salvar', 'attr' => ['class' => 'btn btn-primary mt-3']])
+                     ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            return $this->redirectToRoute('revenue');
+        }
+
+        return $this->render('admin/revenue/edit.html.twig', [
+            'module_title' => 'Editar receita',
             'form' => $form->createView()
         ]);
     }
