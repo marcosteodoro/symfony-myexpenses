@@ -39,7 +39,7 @@
                                             <td>{{ revenue.id }}</td>
                                             <td>{{ revenue.name }}</td>
                                             <td>{{ revenue.description }}</td>
-                                            <td>R$ {{ revenue.value|number_format(2, '.', ',') }}</td>
+                                            <td>R$ {{ revenue.value|number_format(2, ',', '.') }}</td>
                                             <td>{{ revenue.date|date("d/m/Y") }}</td>
                                             <td>{{ revenue.category }}</td>
                                             <td>
