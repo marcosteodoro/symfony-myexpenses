@@ -6,26 +6,32 @@
             </a>
         </div>
         <ul class="nav">
-            <li class="{% if route starts with('admin') %}active{% endif %}">
+            <li class="{% if route is same as ('admin') %}active{% endif %}">
                 <a href="/admin">
                     <i class="ti-panel"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
-            <li class="{% if route starts with('category') %}active{% endif %}">
+            <li class="{% if 'category' in route %}active{% endif %}">
                 <a href="/admin/category">
                     <i class="ti-menu-alt"></i>
                     <p>Categorias</p>
                 </a>
             </li>
             {% if is_granted('ROLE_SUPER_ADMIN') %}
-            <li class="{% if route starts with('user') %}active{% endif %}">
+            <li class="{% if 'user' in route %}active{% endif %}">
                 <a href="/admin/user">
                     <i class="ti-user"></i>
                     <p>Usuários</p>
                 </a>
             </li>
             {% endif %}
+            <li class="{% if 'revenue' in route %}active{% endif %}">
+                <a href="/admin/revenue">
+                    <i class="ti-money"></i>
+                    <p>Receitas</p>
+                </a>
+            </li>
             <li class="">
                 <a href="/logout">
                     <i class="ti-share-alt"></i>

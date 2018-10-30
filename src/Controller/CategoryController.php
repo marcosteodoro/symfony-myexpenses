@@ -10,9 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;  
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-
 use App\Entity\Category;
 
 class CategoryController extends AbstractController
@@ -34,7 +32,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/admin/category/new")
+     * @Route("/admin/category/new"), name="category_new"
      *
      * @param Request $request
      */
@@ -46,20 +44,20 @@ class CategoryController extends AbstractController
 
         $usersChoice = $categoryRenderUtils->getUsersChoice(
             $this->isGranted('ROLE_SUPER_ADMIN'), 
-            $this->getUser(), 
+            $this->getUser(),
             $this->getDoctrine()->getRepository(User::class)
         );
 
         $form = $this->createFormBuilder($category)
-                                    ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                                    ->add('description', TextType::class, ['label' => 'Descrição', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                                    ->add('user', EntityType::class, [
-                                        'label' => 'Usuário',
-                                        'class' => User::class,
-                                        'choices' => $usersChoice,
-                                        'attr' => ['class' => 'form-control']
-                                    ])
-                                    ->add('save', SubmitType::class, ['label' => 'Adicionar', 'attr' => ['class' => 'btn btn-primary mt-3']])
+                     ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
+                     ->add('description', TextType::class, ['label' => 'Descrição', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
+                     ->add('user', EntityType::class, [
+                        'label' => 'Usuário',
+                        'class' => User::class,
+                        'choices' => $usersChoice,
+                        'attr' => ['class' => 'form-control']
+                     ])
+                     ->add('save', SubmitType::class, ['label' => 'Adicionar', 'attr' => ['class' => 'btn btn-primary mt-3']])
                                     ->getForm();
         
         $form->handleRequest($request);

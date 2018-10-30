@@ -27,9 +27,9 @@ class Revenue
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="date")
      */
-    private $type;
+    private $date;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="revenues")
@@ -66,18 +66,6 @@ class Revenue
         return $this;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     public function getCategory(): ?Category
     {
         return $this->category;
@@ -86,6 +74,18 @@ class Revenue
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTime
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\Datetime $date)
+    {
+        $this->date = $date;
 
         return $this;
     }

@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ module_title }}{% endblock %}
+
+
+{% block body %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="header">
+                            <h4 class="title">Lista de receitas&nbsp; 
+                                <a href="/admin/revenue/new">
+                                    <button class="btn btn-sucess btn-sm">
+                                        Adicionar
+                                    </button>    
+                                </a>
+                            </h4>
+                        </div>
+                        
+                        {% if userRevenues|length > 0 %}
+                        <div class="content table-responsive table-full-width">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nome</th>
+                                        <th>Descrição</th>
+                                        <th>Categoria</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for revenue in userRevenues %}
+                                        <tr>
+                                            <td>{{ revenue.id }}</td>
+                                            <td>{{ revenue.name }}</td>
+                                            <td>{{ revenue.description }}</td>
+                                            <td>{{ revenue.category }}</td>
+                                            <td>
+                                            <a href="/admin/revenue/edit/{{ revenue.id }}">
+                                                <button class="btn btn-primary btn-sm">
+                                                    Editar
+                                                </button>
+                                            </a>
+                                            <form class="formDelete" action="/admin/revenue/delete/{{ revenue.id }}">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button class="btn btn-danger btn-sm">
+                                                    Deletar
+                                                </button>                                                
+                                            </form>
+                                            </td>
+                                        </tr>                                        
+                                    {% endfor %}                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="content">
+                            <h4>Nenhuma receita cadastrada! &#x1F61E</h4>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    const formsDelete = document.querySelectorAll('.formDelete');
+
+    formsDelete.forEach((item) => {
+        item.addEventListener('submit', (ev) => {
+            ev.preventDefault();   
+
+            swal({
+                title: "Tem certeza?",
+                text: "Após deletar, não será possível recuperar a informação!",
+                icon: "warning",
+                buttons: ['Cancelar', 'Ok'],
+                dangerMode: true,
+            }).then((willDelete) => {
+                item.submit();
+            });       
+        })
+    });
+</script>
+{% endblock %}
