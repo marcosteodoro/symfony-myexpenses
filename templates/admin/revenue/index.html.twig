@@ -27,6 +27,8 @@
                                         <th>Código</th>
                                         <th>Nome</th>
                                         <th>Descrição</th>
+                                        <th>Valor</th>
+                                        <th>Data</th>
                                         <th>Categoria</th>
                                         <th>Ações</th>
                                     </tr>
@@ -37,6 +39,8 @@
                                             <td>{{ revenue.id }}</td>
                                             <td>{{ revenue.name }}</td>
                                             <td>{{ revenue.description }}</td>
+                                            <td>R$ {{ revenue.value|number_format(2, '.', ',') }}</td>
+                                            <td>{{ revenue.date|date("d/m/Y") }}</td>
                                             <td>{{ revenue.category }}</td>
                                             <td>
                                             <a href="/admin/revenue/edit/{{ revenue.id }}">

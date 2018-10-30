@@ -32,6 +32,13 @@
                                 </div>
                                 
                                 <div class="form-group">
+                                    {{ form_label(form.value) }}
+                                    {{ form_errors(form.value) }}
+                                    {{ form_widget(form.value) }}
+                                    {{ form_help(form.value) }}
+                                </div>
+                                
+                                <div class="form-group">
                                     {{ form_label(form.date) }}
                                     {{ form_errors(form.date) }}
                                     {{ form_widget(form.date) }}

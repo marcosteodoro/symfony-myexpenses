@@ -32,6 +32,11 @@ class Revenue
     private $date;
 
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     */
+    private $value;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="revenues")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -86,6 +91,18 @@ class Revenue
     public function setDate(?\Datetime $date)
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getValue(): ?float 
+    {
+        return $this->value;
+    }
+
+    public function setValue(float $value) : self
+    {
+        $this->value = $value;
 
         return $this;
     }
