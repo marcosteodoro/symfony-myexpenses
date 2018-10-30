@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Entity\Revenue;
 use App\Entity\Category;
+use App\Utils\RevenueRenderUtils;
 
 class RevenueController extends AbstractController
 {
@@ -21,12 +22,10 @@ class RevenueController extends AbstractController
      */
     public function index()
     {
-        $userRevenues = $this->getDoctrine()->getRepository(Revenue::class)->findAll();
-
         return $this->render('admin/revenue/index.html.twig', [
             'controller_name' => 'RevenueController',
             'module_title' => 'Gerenciamento de receitas',
-            'userRevenues' => $userRevenues
+            'userRevenues' => RevenueRenderUtils::getUserRevenues($this->getUser())
         ]);
     }
 
