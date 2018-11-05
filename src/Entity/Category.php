@@ -49,6 +49,11 @@ class Category
      */
     private $revenues;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Expense", mappedBy="category", orphanRemoval=true)
+     */
+    private $expenses;
+
     public function __construct()
     {
         $this->revenues = new ArrayCollection();

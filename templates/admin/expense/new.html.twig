@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adicionar receita{% endblock %}
+
+{% block body %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="header">
+                                <h4 class="title">Adicionar receita</h4>
+                                <p class="category">Informe os dados da receita</p>
+                        </div>
+                        <div class="content">
+                            {{ form_start(form) }}
+
+                                {{ form_errors(form) }}
+
+                                <div class="form-group">
+                                    {{ form_label(form.name) }}
+                                    {{ form_errors(form.name) }}
+                                    {{ form_widget(form.name) }}
+                                    {{ form_help(form.name) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(form.description) }}
+                                    {{ form_errors(form.description) }}
+                                    {{ form_widget(form.description) }}
+                                    {{ form_help(form.description) }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_label(form.place) }}
+                                    {{ form_errors(form.place) }}
+                                    {{ form_widget(form.place) }}
+                                    {{ form_help(form.place) }}
+                                </div>
+                                
+                                <div class="form-group">
+                                    {{ form_label(form.value) }}
+                                    {{ form_errors(form.value) }}
+                                    {{ form_widget(form.value) }}
+                                    {{ form_help(form.value) }}
+                                </div>
+                                
+                                <div class="form-group">
+                                    {{ form_label(form.date) }}
+                                    {{ form_errors(form.date) }}
+                                    {{ form_widget(form.date) }}
+                                    {{ form_help(form.date) }}
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="select">
+                                        {{ form_label(form.category) }}
+                                        {{ form_errors(form.category) }}
+                                        {{ form_widget(form.category) }}
+                                        {{ form_help(form.category) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form_widget(form.save) }}
+                                </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

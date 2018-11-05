@@ -26,9 +26,15 @@
                 </a>
             </li>
             {% endif %}
+            <li class="{% if 'expense' in route %}active{% endif %}">
+                <a href="/admin/expense">
+                    <i class="ti-money"></i>
+                    <p>Despesas</p>
+                </a>
+            </li>
             <li class="{% if 'revenue' in route %}active{% endif %}">
                 <a href="/admin/revenue">
-                    <i class="ti-money"></i>
+                    <i class="ti-wallet"></i>
                     <p>Receitas</p>
                 </a>
             </li>
