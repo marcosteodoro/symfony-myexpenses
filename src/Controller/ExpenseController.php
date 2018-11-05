@@ -80,7 +80,7 @@ class ExpenseController extends AbstractController
                      ->add('description', TextType::class, ['label' => 'Descrição', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
                      ->add('place', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
                      ->add('value', MoneyType::class, ['label' => 'Valor', 'currency' => 'BRL', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                     ->add('date', DateType::class, ['label' => 'Data', 'widget' => 'single_text', 'attr' => ['value' => \date('Y-m-d'), 'class' => 'form-control', 'autocomplete' => false]])
+                     ->add('date', DateType::class, ['label' => 'Data', 'widget' => 'single_text', 'attr' => ['value' => $expense->getDate()->format('Y-m-d'), 'class' => 'form-control', 'autocomplete' => false]])
                      ->add('category', EntityType::class, [
                          'label' => 'Categoria',
                          'class' => Category::class,
