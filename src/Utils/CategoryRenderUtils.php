@@ -9,10 +9,6 @@ class CategoryRenderUtils
 {
     public function getUsersChoice($isSuperAdmin, User $loggedUser, UserRepository $userRepository)
     {
-        if ($isSuperAdmin) {
-            return $userRepository->findAll();
-        }
-        
-        return [$loggedUser];      
+        return ($isSuperAdmin) ? $userRepository->findAll() : [$loggedUser];      
     }
 }

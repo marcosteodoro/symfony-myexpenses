@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\User\UserNewType;
-use App\Form\User\UserEditType;
+use App\Form\User\NewType;
+use App\Form\User\EditType;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +36,7 @@ class UserController extends AbstractController
      */
     public function index()
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $users = $this->entityManager->getRepository(User::class)->findAll();
 
         return [
             'controller_name' => 'UserController',
@@ -53,7 +53,7 @@ class UserController extends AbstractController
     {
         $user = new User();
 
-        $form = $this->createForm(UserNewType::class, $user);
+        $form = $this->createForm(NewType::class, $user);
 
         $form->handleRequest($request);
 
@@ -85,7 +85,7 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user)
     {
-        $form = $this->createForm(UserEditType::class, $user);
+        $form = $this->createForm(EditType::class, $user);
 
         $form->handleRequest($request);
 

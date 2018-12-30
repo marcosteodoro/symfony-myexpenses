@@ -4,121 +4,110 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\User;
-use App\Utils\CategoryRenderUtils;
+use App\Entity\Category;
+use App\Form\Category\NewType;
+use App\Form\Category\EditType;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;  
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use App\Entity\Category;
+use App\Utils\CategoryRenderUtils;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CategoryController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/admin/category", name="category")
+     * @Template("admin/category/index.html.twig")
      */
     public function index()
     {
-        $entityRepository = $this->getDoctrine()->getRepository(Category::class);
+        $entityRepository = $this->entityManager->getRepository(Category::class);
 
         $categories = ($this->isGranted('ROLE_SUPER_ADMIN')) ? $entityRepository->findAll() : $this->getUser()->getCategories();
 
-        return $this->render('admin/category/index.html.twig', [
+        return [
             'controller_name' => 'CategotyController',
             'module_title' => 'Gerenciamento de categorias',
             'categories' => $categories
-        ]);
+        ];
     }
 
     /**
      * @Route("/admin/category/new"), name="category_new"
-     *
-     * @param Request $request
+     * @Template("admin/category/new.html.twig")
      */
     public function new(Request $request)
     {
-        $category = new Category();
+        $category = new Category;
 
         $categoryRenderUtils = new CategoryRenderUtils();
 
         $usersChoice = $categoryRenderUtils->getUsersChoice(
-            $this->isGranted('ROLE_SUPER_ADMIN'), 
+            $this->isGranted('ROLE_SUPER_ADMIN'),
             $this->getUser(),
-            $this->getDoctrine()->getRepository(User::class)
+            $this->entityManager->getRepository(User::class)
         );
-
-        $form = $this->createFormBuilder($category)
-                     ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                     ->add('description', TextType::class, ['label' => 'Descrição', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                     ->add('user', EntityType::class, [
-                        'label' => 'Usuário',
-                        'class' => User::class,
-                        'choices' => $usersChoice,
-                        'attr' => ['class' => 'form-control']
-                     ])
-                     ->add('save', SubmitType::class, ['label' => 'Adicionar', 'attr' => ['class' => 'btn btn-primary mt-3']])
-                                    ->getForm();
+        
+        $form = $this->createForm(NewType::class, $category, ['usersChoice' => $usersChoice]);
         
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $category = $form->getData();
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($category);
-            $entityManager->flush();
-
+            
+            $this->entityManager->persist($category);
+            $this->entityManager->flush();
+            
             return $this->redirectToRoute('category');
         }
-
-        return $this->render('admin/category/new.html.twig', [
+        
+        return [
             'module_title' => 'Adicionar categoria',
             'form' => $form->createView()
-        ]);
+        ];
     }
 
     /**
      * @Route("/admin/category/edit/{id}"), methods={"GET","HEAD"})
+     * @Template("admin/category/edit.html.twig")
      */
     public function edit(Request $request, Category $category)
-    {
-        $formBuilder = $this->createFormBuilder($category)
-                     ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                     ->add('description', TextType::class, ['label' => 'Descrição', 'attr' => ['class' => 'form-control', 'autocomplete' => false]]);
-        
+    {        
+        $usersChoice = [];
+
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-
             $usersChoice = (new CategoryRenderUtils)->getUsersChoice(
-                true, 
-                $this->getUser(), 
-                $this->getDoctrine()->getRepository(User::class)
+                    true, 
+                    $this->getUser(), 
+                    $this->entityManager->getRepository(User::class)
             );
-
-            $formBuilder->add('user', EntityType::class, [
-                    'label' => 'Usuário',
-                    'class' => User::class,
-                    'choices' => $usersChoice,
-                    'attr' => ['class' => 'form-control']
-            ]);
         }
-            
-        $form = $formBuilder->add('save', SubmitType::class, ['label' => 'Salvar', 'attr' => ['class' => 'btn btn-primary mt-3']])
-             ->getForm();
 
+        $form = $this->createForm(EditType::class, $category, [
+            'isGrantedSuperAdmin' => ($this->isGranted('ROLE_SUPER_ADMIN')),
+            'usersChoice' => $usersChoice
+        ]);
+            
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('category');
         }
 
-        return $this->render('admin/category/edit.html.twig', [
+        return [
             'module_title' => 'Editar categoria',
             'form' => $form->createView()
-        ]);
+        ];
     }
 
     /** 
@@ -126,9 +115,8 @@ class CategoryController extends AbstractController
      */
     public function delete(Request $resquest, Category $category)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($category);
-        $entityManager->flush();
+        $this->entityManager->remove($category);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('category');
     }
