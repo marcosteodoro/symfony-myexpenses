@@ -2,24 +2,19 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
+use App\Form\UserNewType;
+use App\Form\UserEditType;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Entity\Exception\UserInvalidArgumentException;
 use Symfony\Component\Form\FormError;
+use Doctrine\ORM\EntityManagerInterface;
 
 
  /**
@@ -27,6 +22,13 @@ use Symfony\Component\Form\FormError;
   */
 class UserController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/admin/user", name="user")
      */
@@ -48,22 +50,7 @@ class UserController extends AbstractController
     {
         $user = new User();
 
-        $form = $this->createFormBuilder($user)
-                     ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                     ->add('username', TextType::class, ['label' => 'Usuário', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                     ->add('plainPassword', RepeatedType::class, ['type' => PasswordType::class,
-                     'first_options'  => array('label' => 'Senha', 'attr' => ['class' => 'form-control']),
-                     'second_options' => array('label' => 'Repita sua senha', 'attr' => ['class' => 'form-control']),
-                     ])
-                     ->add('email', EmailType::class, ['label' => 'E-mail', 'attr' => ['class' => 'form-control']])
-                     ->add('roleLevel', ChoiceType::class)
-                     ->add('isActive', CheckboxType::class, ['label' => 'Ativo', 'required' => false])
-                     ->add('roleLevel', ChoiceType::class, ['label' => 'Nível de acesso', 'required' => true, 'choices' => [
-                         'Administrador' => 'admin',
-                         'Super Administrador' => 'super_admin'
-                     ], 'attr' => ['class' => 'form-control']])
-                     ->add('save', SubmitType::class, ['label' => 'Adicionar', 'attr' => ['class' => 'btn btn-primary mt-3']])
-                     ->getForm();
+        $form = $this->createForm(UserNewType::class, $user);
 
         $form->handleRequest($request);
 
@@ -74,9 +61,8 @@ class UserController extends AbstractController
             $user->setPassword($password);
             
             try {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
                 return $this->redirectToRoute('user');
             } catch (UserInvalidArgumentException $e) {
                 $formError = new FormError($e->getMessage());
@@ -95,23 +81,12 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user)
     {
-        $form = $this->createFormBuilder($user)
-                     ->add('name', TextType::class, ['label' => 'Nome', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                     ->add('username', TextType::class, ['label' => 'Usuário', 'attr' => ['class' => 'form-control', 'autocomplete' => false]])
-                     ->add('email', EmailType::class, ['label' => 'E-mail', 'attr' => ['class' => 'form-control']])
-                     ->add('roleLevel', ChoiceType::class, ['label' => 'Nível de acesso', 'required' => true, 'choices' => [
-                        'Administrador' => 'admin',
-                        'Super Administrador' => 'super_admin'
-                    ], 'attr' => ['class' => 'form-control']])
-                     ->add('isActive', CheckboxType::class, ['label' => 'Ativo', 'required' => false])
-                     ->add('save', SubmitType::class, ['label' => 'Salvar', 'attr' => ['class' => 'btn btn-primary mt-3']])
-                     ->getForm();
+        $form = $this->createForm(UserEditType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('user');
         }
@@ -127,9 +102,8 @@ class UserController extends AbstractController
      */
     public function delete(Request $resquest, User $user)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($user);
-        $entityManager->flush();
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('user');
     }
