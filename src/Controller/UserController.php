@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserNewType;
 use App\Form\UserEditType;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,20 +32,22 @@ class UserController extends AbstractController
 
     /**
      * @Route("/admin/user", name="user")
+     * @Template("admin/user/index.html.twig")
      */
     public function index()
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
-        return $this->render('admin/user/index.html.twig', [
+        return [
             'controller_name' => 'UserController',
             'module_title' => 'Gerenciamento de usuários',
             'users' => $users
-        ]);
+        ];
     }
 
     /**
      * @Route("/admin/user/new", name="user_new")
+     * @Template("admin/user/new.html.twig")
      */
     public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -70,14 +73,15 @@ class UserController extends AbstractController
             }
         }
         
-        return $this->render('admin/user/new.html.twig', [
+        return [
             'module_title' => 'Adicionar usuário',
             'form' => $form->createView()
-        ]);
+        ];
     }
 
     /**
      * @Route("/admin/user/edit/{id}"), methods={"GET","HEAD"})
+     * @Template("admin/user/edit.html.twig")
      */
     public function edit(Request $request, User $user)
     {
@@ -91,10 +95,10 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user');
         }
 
-        return $this->render('admin/user/edit.html.twig', [
+        return [
             'module_title' => 'Editar usuário',
             'form' => $form->createView()
-        ]);
+        ];
     }
 
     /** 
